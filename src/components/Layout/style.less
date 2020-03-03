@@ -1,0 +1,53 @@
+.layout {
+  height: 100vh;
+  display: flex;
+  .left {
+    width: 230px;
+    background-color: #dadce5;
+    .user {
+      height: 200px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .avatar {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        border: 2px solid #ffffff;
+        background-color: #ffffff;
+        background-size: cover;
+        background-position: 50% 50%;
+        background-repeat: no-repeat;
+      }
+    }
+    .list {
+      & > div {
+        position: relative;
+        font-size: 25px;
+        padding: 5px 0;
+        padding-left: 45px;
+        i {
+          font-size: 25px;
+          margin-right: 20px;
+        }
+      }
+      .active::before {
+        position: absolute;
+        height: 100%;
+        content: ' ';
+        border-left: 6px solid #7e868c;
+        left: 0;
+        top: 0;
+      }
+      .seed-active {
+        color: @seed-color;
+        &::before {
+          border-color: @seed-color;
+        }
+      }
+    }
+  }
+  .right {
+    flex: 1;
+  }
+}

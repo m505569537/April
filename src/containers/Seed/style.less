@@ -1,0 +1,49 @@
+.seed {
+  position: relative;
+  .drips {}
+  .add-seed {
+    position: fixed;
+    right: 50px;
+    bottom: 50px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: @seed-color;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    box-shadow: 0 3px 5px 2px #e8e8e8;
+    font-size: 25px;
+    transition: all .5s;
+    i {
+      font-size: 25px;
+      // color: #cacaca;
+      color: #ffffff;
+      transition: all .5s;
+    }
+    .rise-icon {
+      position: absolute;
+    }
+    .rise-animation {
+      animation: riseAnimation .8s linear forwards;
+    }
+
+    @keyframes riseAnimation {
+      0% {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-100px);
+        opacity: 0;
+      }
+    }
+  }
+  .add-seed:hover {
+    background-color: #ffffff;
+    & > i {
+      color: @seed-color;
+    }
+  }
+}
