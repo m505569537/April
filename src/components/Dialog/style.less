@@ -9,36 +9,37 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: all .5s;
   .dialog {
     position: relative;
     box-sizing: border-box;
-    min-width: 85%;
+    width: 85%;
     min-height: 70%;
-    padding-top: 75px;
+    max-height: 85%;
+    padding-top: 40px;
     border-radius: 9px;
     background-color: #ffffff;
+    overflow: auto;
     .over-icon {
       position: absolute;
-      width: 80%;
-      height: 100px;
-      line-height: 100px;
-      left: 50%;
-      top: -25px;
-      transform: translateX(-50%);
-      border-radius: 8px;
-      box-shadow: 1px 3px 3px 1px #e8e8e8;
+      left: 0;
+      top: 0;
+      width: 160px;
+      height: 40px;
+      line-height: 40px;
+      border-radius: 8px 0;
+      box-shadow: 1px 1px 12px 1px #d5d5d5;
       i {
         position: absolute;
-        top: -70px;
-        font-size: 100px;
+        left: 20px;
+        top: -26px;
+        font-size: 30px;
       }
       p {
-        font-size: 70px;
         text-align: right;
         margin: 0;
-        margin-right: 35px;
+        margin-right: 13px;
         color: #f8f8f8;
+        font-size: 23px;
       }
     }
     .icon-close {
@@ -50,6 +51,62 @@
       transition: all .2s;
       &:hover {
         color: #fe3b3b;
+      }
+    }
+    .form-input {
+      margin: 16px;
+      padding: 16px;
+      border: 1px solid #f6f6f6;
+      box-shadow: 0 0 10px 5px #f6f6f6;
+      border-radius: 5px;
+      & > span {
+        border: 0;
+      }
+      hr {
+        border: 0;
+        border-top: 2px solid #e5e5e5;
+      }
+      textarea {
+        // margin-top: 16px;
+        border: 0;
+        resize: none;
+      }
+      .tags {
+        display: flex;
+        margin: 8px 0;
+        & > div {
+          padding: 2px 6px;
+          border-radius: 4px;
+          box-shadow: 0 1px 4px 2px #efefef;
+          display: flex;
+          align-items: center;
+          color: #a09f9f;
+          margin-right: 8px;
+          transition: all 0.5s;
+          i {
+            font-size: 15px;
+          }
+          span {
+            margin-left: 3px;
+          }
+        }
+        .img-tag:hover {
+          color: #10b310;
+          box-shadow: 0 0 2px 1px #5fe05f;
+        }
+        .video-tag:hover {
+          color: #6e6e6e;
+          box-shadow: 0 0 2px 1px #a3a3f1;
+        }
+      }
+    }
+    .place-holder {
+      text-align: right;
+      padding: 10px 0 20px;
+      .sticky-btn {
+        position: sticky;
+        right: 16px;
+        bottom: 20px;
       }
     }
   }

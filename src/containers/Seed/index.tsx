@@ -16,6 +16,10 @@ const Seed = () => {
   const holdingSeed = () => {
     setVisible(true)
   }
+
+  const handleClose = () => {
+    setVisible(false)
+  }
   
   return (
     <div className='seed'>
@@ -29,7 +33,7 @@ const Seed = () => {
         <i className='iconfont icon-hand-holding-seedling' />
         <i className={cx('iconfont icon-hand-holding-seedling','rise-icon', visible ? 'rise-animation' : '')} />
       </div>
-      <Dialog visible={visible} type='seed' />
+      <Dialog visible={visible} type='seed' onClose={handleClose} />
     </div>
   )
 }
