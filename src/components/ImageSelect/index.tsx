@@ -1,8 +1,14 @@
+declare function require(string): string
+
 import React, { useEffect, useState } from 'react'
 import { message } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 
+// 在ts中引入图片好像又那么点问题， 可以看下webpack中file-loader的options
+import LeftImg from '%/images/left.png'
+import RightImg from '%/images/right.png'
 import './style.less'
+
 
 // func 1.添加图片，当添加了一张图片后，图片tag不可点击，下方的图片选择框
 // 后面会多出来一个图片添加框
@@ -13,18 +19,20 @@ interface Props {
   maxNum: number;
   imgs: object;
   addImgs: any;
+  deleteImg: any;
 }
 
 interface IProps {
   idx: string;
   img: any;
   addImgs: any;
+  deleteImg: any;
 }
 
 const ImageSelectThumbnail = (props: IProps) => {
   let inputRef:any
   const [ path, setPath ] = useState<any>('')
-  const { idx, img, addImgs } = props
+  const { idx, img, addImgs, deleteImg } = props
 
   useEffect(() => {
     if (img && window.FileReader) {
@@ -47,26 +55,27 @@ const ImageSelectThumbnail = (props: IProps) => {
       message.error('请选择图片文件')
       inputRef.value = ''
     } else {
-      addImgs(file)
+      addImgs(file, idx)
     }
   }
   
   return (
     <div className='img-select-thumbnail'>
       <div className='image-select'>
-        <input id={"upload" + idx} type='file' style={{ display: 'none' }} ref={input => inputRef = input} onChange={getFile} />
+        <input id={"upload" + idx} type='file' ref={input => inputRef = input} onChange={getFile} />
         <label htmlFor={"upload" + idx}>
           <PlusOutlined style={{ fontSize: '40px', color: '#999999' }} />
           { path && <div style={{ backgroundImage: `url(${path})` }} /> }
+          { path &&  <i className='iconfont icon-delete1' onClick={() => deleteImg(idx)} /> }
         </label>
-        <p>{  img && img.name || '' }</p>
+        { path && <p>{  img && img.name || '' }</p> }
       </div>
     </div>
   )
 }
 
 const ImageSelect = (props: Props) => {
-  const { maxNum, imgs, addImgs } = props
+  const { maxNum, imgs, addImgs, deleteImg } = props
 
   const imgIdxs = Object.keys(imgs)
   if (imgIdxs.length < maxNum) {
@@ -75,9 +84,11 @@ const ImageSelect = (props: Props) => {
   
   return (
     <div className='img-select-box'>
+      <img src={LeftImg} style={{ position: 'absolute', left: '-1px', top: '-1px' }} />
       {
-        imgIdxs.map(item => <ImageSelectThumbnail key={item} idx={item} img={imgs[item] || null} addImgs={addImgs} /> )
+        imgIdxs.map(item => <ImageSelectThumbnail key={item} idx={item} img={imgs[item] || null} addImgs={addImgs} deleteImg={deleteImg} /> )
       }
+      <img src={RightImg} style={{ position: 'absolute', right: '-1px', bottom: '-1px' }} />
     </div>
   )
 }

@@ -35,16 +35,32 @@ const Dialog = (props: Props) => {
   const { visible, type, onClose } = props
 
   const toggleImgs = () => {
-    setShowImgs(!showImgs)
+    setShowImgs(true)
   }
 
-  const addImgs = (img: object) => {
-    const idxArr = Object.keys(imgs)
-    let tmpIdx = idxArr.length > 0 ? (parseInt(idxArr[idxArr.length - 1]) + 1) : 0
+  const addImgs = (img: object, idx: string|number) => {
     const tmpImg = { ...imgs }
-    tmpImg[tmpIdx] = img
+    if (idx != '-1') {
+      // 修改要上传的图片
+      tmpImg[idx] = img
+    } else {
+      // 添加要上传的图片
+      const idxArr = Object.keys(imgs)
+      let tmpIdx = idxArr.length > 0 ? (parseInt(idxArr[idxArr.length - 1]) + 1) : 0
+      tmpImg[tmpIdx] = img
+    }
+    
     console.log('imgss', tmpImg)
     setImgs(tmpImg)
+  }
+
+  const deleteImg = (idx: string|number) => {
+    const tmpImgs = { ...imgs }
+    delete tmpImgs[idx]
+    if (Object.keys(tmpImgs).length == 0) {
+      setShowImgs(false)
+    }
+    setImgs(tmpImgs)
   }
   
   return (
@@ -71,7 +87,7 @@ const Dialog = (props: Props) => {
               </div>
             </div>
             <div className='media-box'>
-              { showImgs && <ImageSelect maxNum={imgsMaxNum} imgs={imgs} addImgs={addImgs} /> }
+              { showImgs && <ImageSelect maxNum={imgsMaxNum} imgs={imgs} addImgs={addImgs} deleteImg={deleteImg} /> }
               <div className='video-box'>
               </div>
             </div>

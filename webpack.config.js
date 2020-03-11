@@ -17,7 +17,9 @@ module.exports = env => {
       filename:
         env === "development" ? "js/[name].dev.js" : "[name].[chunkhash:8].js",
       chunkFilename:
-        env === "development" ? "js/[name].dev.js" : "[name].[chunkhash:8].js"
+        env === "development" ? "js/[name].dev.js" : "[name].[chunkhash:8].js",
+      hotUpdateChunkFilename: 'hot/hot-update.js',
+      hotUpdateMainFilename: 'hot/hot-update.json'
     },
     plugins: [
       new webpack.HotModuleReplacementPlugin(),
@@ -47,6 +49,16 @@ module.exports = env => {
     ],
     module: {
       rules: [
+        {
+          test: /\.(png|jpg|svg|gif)$/,
+          use: {
+            loader: 'file-loader',
+            options: {
+              name: env == 'development' ? '[name].dev.[ext]' : '[name].[chunkhash:8].[ext]',
+              outputPath: 'imgs/',
+            }
+          }
+        },
         {
           test: /\.(css|less)$/,
           use: [
@@ -93,6 +105,7 @@ module.exports = env => {
       alias: {
         "@": path.resolve(__dirname, "src/containers"),
         "#": path.resolve(__dirname, "src/components"),
+        "%": path.resolve(__dirname, "src/static"),
         "$": path.resolve(__dirname, 'config')
       }
     },
