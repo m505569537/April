@@ -3,6 +3,7 @@ import cx from 'classnames'
 import { Input, Button } from 'antd'
 
 import ImageSelect from '../ImageSelect'
+import VideoSelect from '../VideoSelect'
 import './style.less'
 
 const { TextArea } = Input
@@ -24,6 +25,9 @@ const styleObj = {
 
 const Dialog = (props: Props) => {
 
+  const [ title, setTilte ] = useState('')
+  const [ content, setContent ] = useState('')
+
   const [ imgs, setImgs ] = useState({})
   const [ showImgs, setShowImgs ] = useState(false)
   const imgsMaxNum = 5  // 限制图片数量
@@ -38,6 +42,10 @@ const Dialog = (props: Props) => {
     setShowImgs(true)
   }
 
+  const toggleVdes = () => {
+    setShowVdes(true)
+  }
+
   const addImgs = (img: object, idx: string|number) => {
     const tmpImg = { ...imgs }
     if (idx != '-1') {
@@ -50,7 +58,6 @@ const Dialog = (props: Props) => {
       tmpImg[tmpIdx] = img
     }
     
-    console.log('imgss', tmpImg)
     setImgs(tmpImg)
   }
 
@@ -61,6 +68,19 @@ const Dialog = (props: Props) => {
       setShowImgs(false)
     }
     setImgs(tmpImgs)
+  }
+
+  const addVdes = (vde: object, idx: string|number) => {
+    const tmpVdes = { ...vdes }
+    if (idx != '-1') {
+      tmpVdes[idx] = vde
+    } else {
+      const idxArr = Object.keys(tmpVdes)
+      let tmpIdx = idxArr.length > 0 ? (parseInt(idxArr[idxArr.length - 1]) + 1) : 0
+      tmpVdes[tmpIdx] = vde
+    }
+    console.log('sd', tmpVdes)
+    setVdes(tmpVdes)
   }
   
   return (
@@ -73,23 +93,22 @@ const Dialog = (props: Props) => {
         <i className='iconfont icon-close' onClick={onClose} />
         <div className='overflow-box'>
           <div className='form-input'>
-            <Input placeholder='请输入标题' prefix={<i className='iconfont icon-title' />} />
+            <Input placeholder='请输入标题' value={title} prefix={<i className='iconfont icon-title' />} onChange={e => setTilte(e.target.value)} />
             <hr />
-            <TextArea placeholder='请输入内容' autoSize={{ minRows: 5, maxRows: 12 }} />
+            <TextArea placeholder='请输入内容' value={content} autoSize={{ minRows: 5, maxRows: 12 }} onChange={e => setContent(e.target.value)} />
             <div className='tags'>
               <div className={cx('img-tag', showImgs ? 'img-tag-active' : '')} onClick={!showImgs ? toggleImgs : null}>
                 <i className='iconfont icon-image' />
                 <span>图片</span>
               </div>
-              <div className={cx('video-tag', Object.keys(vdes).length > 0 ? 'video-tag-active' : '')}>
+              <div className={cx('video-tag', showVdes ? 'video-tag-active' : '')} onClick={!showVdes ? toggleVdes : null}>
                 <i className='iconfont icon-Video' />
                 <span>视频</span>
               </div>
             </div>
             <div className='media-box'>
               { showImgs && <ImageSelect maxNum={imgsMaxNum} imgs={imgs} addImgs={addImgs} deleteImg={deleteImg} /> }
-              <div className='video-box'>
-              </div>
+              { showVdes && <VideoSelect maxNum={vdesMaxNum} vdes={vdes} addVdes={addVdes} /> }
             </div>
           </div>
           <div className='place-holder'>

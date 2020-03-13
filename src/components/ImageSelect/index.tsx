@@ -35,12 +35,14 @@ const ImageSelectThumbnail = (props: IProps) => {
   const { idx, img, addImgs, deleteImg } = props
 
   useEffect(() => {
-    if (img && window.FileReader) {
-      let reader = new FileReader()
-      reader.readAsDataURL(img)
-      reader.onload = (e) => {
-        setPath(e.target.result)
-      }
+    if (img && window.URL) {
+      // let reader = new FileReader()
+      // reader.readAsDataURL(img)
+      // reader.onload = (e) => {
+      //   setPath(e.target.result)
+      // }
+      const url = URL.createObjectURL(img)
+      setPath(url)
     }
   }, [])
 
@@ -51,7 +53,7 @@ const ImageSelectThumbnail = (props: IProps) => {
       return
     }
     const suffix = /\.(jpg|png|jpeg|gif)$/g
-    if (!suffix.test(file.name.toLowerCase())) {
+    if (!suffix.test(file.name)) {
       message.error('请选择图片文件')
       inputRef.value = ''
     } else {
@@ -62,8 +64,8 @@ const ImageSelectThumbnail = (props: IProps) => {
   return (
     <div className='img-select-thumbnail'>
       <div className='image-select'>
-        <input id={"upload" + idx} type='file' ref={input => inputRef = input} onChange={getFile} />
-        <label htmlFor={"upload" + idx}>
+        <input id={"upload_img" + idx} type='file' ref={input => inputRef = input} onChange={getFile} />
+        <label htmlFor={"upload_img" + idx}>
           <PlusOutlined style={{ fontSize: '40px', color: '#999999' }} />
           { path && <div style={{ backgroundImage: `url(${path})` }} /> }
           { path &&  <i className='iconfont icon-delete1' onClick={() => deleteImg(idx)} /> }

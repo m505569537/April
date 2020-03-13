@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import cx from 'classnames'
-import { BrowserRouter, Link, Switch, Route, withRouter, Redirect } from 'react-router-dom'
+import { Switch, Route, withRouter, Redirect } from 'react-router-dom'
 
 import Seed from '@/Seed'
 import './style.less'

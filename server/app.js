@@ -1,4 +1,6 @@
+const path = require('path')
 const koa = require("koa")
+const staticServer = require('koa-static');
 const bodyParser = require("koa-bodyparser")
 const cors = require("koa2-cors")
 const router = require("./routes")
@@ -24,6 +26,9 @@ app.use(
   })
 )
 
+// 搭建静态资源服务器，使目录中的文件可以被访问
+// localhost:4000/images/XXX.jpg
+app.use(staticServer(path.join(__dirname, '/public/')))
 app.use(bodyParser())
 app.use(router.routes())
 

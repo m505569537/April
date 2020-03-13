@@ -44,6 +44,7 @@
         "koa-bodyparser": "^4.2.1",
         "koa-multer": "^1.0.2",
         "koa-router": "^8.0.8",
+        "koa-static": "^5.0.0",
         "koa2-cors": "^2.0.6",
         "less": "^3.11.1",
         "less-loader": "^5.0.0",
@@ -65,5 +66,8 @@
         "@typescript-eslint/parser": "^2.21.0",
         "eslint": "^6.8.0",
         "eslint-plugin-react": "^7.18.3"
+    },
+    "webkit": {
+        "plugin": true
     }
 }
