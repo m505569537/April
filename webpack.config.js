@@ -106,7 +106,8 @@ module.exports = env => {
         "@": path.resolve(__dirname, "src/containers"),
         "#": path.resolve(__dirname, "src/components"),
         "%": path.resolve(__dirname, "src/static"),
-        "$": path.resolve(__dirname, 'config')
+        "$": path.resolve(__dirname, 'config'),
+        "&": path.resolve(__dirname, 'src/services')
       }
     },
     devtool: "cheap-eval-source-map",

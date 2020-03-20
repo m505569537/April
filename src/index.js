@@ -2,7 +2,7 @@ import React from "react"
 import ReactDOM from "react-dom"
 import { BrowserRouter } from 'react-router-dom'
 
-import Layout from '#/Layout'
+import Router from './router'
 import './index.less'
 
-ReactDOM.render(<BrowserRouter><Layout /></BrowserRouter>, document.getElementById("root"))
+ReactDOM.render(<BrowserRouter><Router /></BrowserRouter>, document.getElementById("root"))

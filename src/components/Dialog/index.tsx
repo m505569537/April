@@ -12,6 +12,7 @@ interface Props {
   visible: boolean;
   type: string;
   onClose: any;
+  onSubmit: any;
 }
 
 const styleObj = {

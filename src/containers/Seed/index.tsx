@@ -8,6 +8,7 @@ import React, { useState, createContext } from 'react'
 import cx from 'classnames'
 
 import Dialog from '#/Dialog'
+import { addSeed } from '&/api'
 import './style.less'
 
 const Seed = () => {
@@ -19,6 +20,12 @@ const Seed = () => {
 
   const handleClose = () => {
     setVisible(false)
+  }
+
+  const handleSubmit = (params) => {
+    addSeed(params).then(res => {
+      console.log(res)
+    })
   }
   
   return (
@@ -33,7 +40,7 @@ const Seed = () => {
         <i className='iconfont icon-hand-holding-seedling' />
         <i className={cx('iconfont icon-hand-holding-seedling','rise-icon', visible ? 'rise-animation' : '')} />
       </div>
-      <Dialog visible={visible} type='seed' onClose={handleClose} />
+      <Dialog visible={visible} type='seed' onClose={handleClose} onSubmit={handleSubmit} />
     </div>
   )
 }

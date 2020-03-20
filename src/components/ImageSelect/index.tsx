@@ -26,10 +26,10 @@ interface IProps {
   idx: string;
   img: any;
   addImgs: any;
-  deleteImg: any;
+  deleteImg?: any;
 }
 
-const ImageSelectThumbnail = (props: IProps) => {
+export const ImageSelectThumbnail = (props: IProps) => {
   let inputRef:any
   const [ path, setPath ] = useState<any>('')
   const { idx, img, addImgs, deleteImg } = props
@@ -44,7 +44,7 @@ const ImageSelectThumbnail = (props: IProps) => {
       const url = URL.createObjectURL(img)
       setPath(url)
     }
-  }, [])
+  }, [img])
 
   const getFile = () => {
     const file = inputRef.files[0]
@@ -68,7 +68,7 @@ const ImageSelectThumbnail = (props: IProps) => {
         <label htmlFor={"upload_img" + idx}>
           <PlusOutlined style={{ fontSize: '40px', color: '#999999' }} />
           { path && <div style={{ backgroundImage: `url(${path})` }} /> }
-          { path &&  <i className='iconfont icon-delete1' onClick={() => deleteImg(idx)} /> }
+          { path && deleteImg &&  <i className='iconfont icon-delete1' onClick={() => deleteImg(idx)} /> }
         </label>
         { path && <p>{  img && img.name || '' }</p> }
       </div>

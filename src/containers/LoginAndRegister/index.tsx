@@ -1,64 +1,121 @@
 import React, { useState } from 'react'
-import { Form, Input, Button, Tabs } from 'antd'
-import ImageSelect from '@/ImageSelect'
+import { Form, Input, Button, Tabs, message } from 'antd'
+
+import { ImageSelectThumbnail } from '#/ImageSelect'
+import { userLogin, userRegister } from '&/api'
+import Cookies from '../../utils/cookies'
+import './style.less'
+
+interface Props {
+  history:any;
+}
 
 const { TabPane } = Tabs
 const FormItem = Form.Item
 
-const LoginAndRegister = () => {
+const layout = {
+  labelCol: { span: 4 },
+  wrapperCol: { span: 20 }
+}
+
+const LoginAndRegister = (props: Props) => {
 
   const [ type, setType ] = useState('login')
-  const [ imgs, setImgs ] = useState<any>({})
+  const [ img, setImg ] = useState(null)
+  const [ email, setEmail ] = useState('')
+  const [ username, setUsername ] = useState('')
+  const [ pwd, setPwd ] = useState('')
+  const [ pwd2, setPwd2 ] = useState('')
+
+  const [ id, setId ] = useState('')
+
+  const { history } = props
+
+  const toRegister = () => {
+    if (!email || !username || !pwd || pwd !== pwd2) {
+      message.error('请输入正确的信息')
+      return
+    }
+    if (!img) {
+      message.error('请添加头像')
+      return
+    }
+    let params = new FormData()
+    params.append('username', username)
+    params.append('email', email)
+    params.append('pwd', pwd)
+    params.append('avatar', img)
+    userRegister(params).then(res => {
+      if (res.errcode == 0) {
+        history.push('/home')
+      } else {
+        message.error(res.message)
+      }
+    })
+  }
+
+  const toLogin = () => {
+    if (!id || !pwd) {
+      message.error('请输入账号/密码')
+      return
+    }
+    const params = {
+      id,
+      pwd
+    }
+    userLogin(params).then(async res => {
+      if (res.errcode == 0) {
+        history.push('/home')
+      } else {
+        message.error(res.message)
+      }
+    })
+  }
 
   const addImgs = (img: object, idx: string|number) => {
-    const tmpImg = { ...imgs }
-    if (idx != '-1') {
-      // 修改要上传的图片
-      tmpImg[idx] = img
-    } else {
-      // 添加要上传的图片
-      const idxArr = Object.keys(imgs)
-      let tmpIdx = idxArr.length > 0 ? (parseInt(idxArr[idxArr.length - 1]) + 1) : 0
-      tmpImg[tmpIdx] = img
-    }
-    
-    setImgs(tmpImg)
+    setImg(img)
+  }
+
+  const handleChange = (key) => { 
+    setType(key)
+    setPwd('') 
+    setId('')
   }
 
   const register = () => (
-    <Form>
+    <Form { ...layout }>
       <FormItem label='邮箱'>
-        <Input />
+        <Input value={email} onChange={e => setEmail(e.target.value)} />
       </FormItem>
       <FormItem label='用户名'>
-        <Input />
+        <Input value={username} onChange={e => setUsername(e.target.value)} />
       </FormItem>
       <FormItem label='密码'>
-        <Input />
+        <Input value={pwd} onChange={e => setPwd(e.target.value)} />
       </FormItem>
       <FormItem label='确认密码'>
-        <Input />
+        <Input value={pwd2} onChange={e => setPwd2(e.target.value)} />
       </FormItem>
-      <FormItem>
-        <ImageSelect maxNum={1} imgs={imgs} addImgs={addImgs} />
+      <FormItem label='选择头像'>
+        <ImageSelectThumbnail  img={img} idx={-2} addImgs={addImgs} />
       </FormItem>
-      <FormItem>
-        <Button>注册</Button>
+      <FormItem wrapperCol={{ offset: 4 }}>
+        <Button onClick={toRegister}>注册</Button>
       </FormItem>
     </Form>
   )
 
   const login = () => (
     <div className='login'>
-      <Input placeholder='请输入用户名/邮箱' />
-      <Input placeholder='请输入密码' />
-      <Button>登录</Button>
+      <Input placeholder='请输入用户名/邮箱' value={id} onChange={e => setId(e.target.value)} />
+      <Input placeholder='请输入密码' value={pwd} onChange={e => setPwd(e.target.value)} />
+      <Button onClick={toLogin}>登录</Button>
     </div>
   )
   
   return (
     <div className='login-register'>
-      <Tabs activeKey={type} onChange={key => setType(key)}>
+      <Tabs className='login-register-cont' activeKey={type} onChange={handleChange}>
         <TabPane tab='login' key='login'>
           { login() }
         </TabPane>

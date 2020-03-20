@@ -9,22 +9,20 @@ require("./db")
 
 const app = new koa()
 
-app.use(
-  cors({
-    origin: ctx => {
-      const whiteList = [""]
-      if (whiteList.indexOf(ctx.request.header.origin) !== -1) {
-        return ctx.request.header.origin
-      }
-      return "*"
-    },
-    maxAge: 5,
-    credentials: true,
-    allowMethods: ["GET", "POST"],
-    allowHeaders: ["Content-Type", "Authorization", "Accept"],
-    exposeHeaders: ["www-Authenticate", "Server-Authorization"]
-  })
-)
+app.use(cors({
+  origin: function(ctx) {
+    const whiteList = ['http://localhost:3000', 'http://localhost:8080']
+    if(whiteList.indexOf(ctx.request.header.origin) !== -1){
+      return ctx.request.header.origin
+    }
+    return '*'
+  },
+  maxAge: 5,
+  credentials: true,     //允许服务器发送cookie
+  allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowHeaders: ['Content-Type', 'Authorization', 'Accept'],
+  exposeHeaders: ['www-Authenticate', 'Server-Authorization']
+}))
 
 // 搭建静态资源服务器，使目录中的文件可以被访问
 // localhost:4000/images/XXX.jpg
