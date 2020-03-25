@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { Spin } from 'antd'
-import { PlusOutlined } from '@ant-design/icons'
+import { Spin, Upload, Button, message } from 'antd'
+import { PlusOutlined, UploadOutlined } from '@ant-design/icons'
 
+import { uploadVde } from '&/api'
 import './style.less'
-import { message } from 'antd'
 
 interface Props {
   vdes: object;
@@ -27,9 +27,7 @@ const VideoPreview = (props: IProps) => {
   useEffect(() => {
     if (vde && window.URL) {
       // setLoading(true)
-      const url = window.URL.createObjectURL(vde)
-      setPath(url)
-      console.log(url)
+      setPath(vde)
     }
   }, [])
 
@@ -44,7 +42,13 @@ const VideoPreview = (props: IProps) => {
       message.error('请选择视频文件')
       return
     } else {
-      addVdes(file, idx)
+      let params = new FormData()
+      params.append('vde', file)
+      uploadVde(params).then(res => {
+        if (res.errcode === 0) {
+          addVdes(res.vde_url, idx)
+        }
+      })
     }
   }
   

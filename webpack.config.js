@@ -55,7 +55,7 @@ module.exports = env => {
             loader: 'file-loader',
             options: {
               name: env == 'development' ? '[name].dev.[ext]' : '[name].[chunkhash:8].[ext]',
-              outputPath: 'app/imgs/',
+              outputPath: './app/imgs',
             }
           }
         },

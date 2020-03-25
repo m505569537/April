@@ -1,12 +1,8 @@
-declare function require(string): string
-
 import React, { useEffect, useState } from 'react'
 import { message } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 
-// 在ts中引入图片好像又那么点问题， 可以看下webpack中file-loader的options
-import LeftImg from '%/images/left.png'
-import RightImg from '%/images/right.png'
+import { uploadImg } from '&/api'
 import './style.less'
 
 
@@ -35,14 +31,14 @@ export const ImageSelectThumbnail = (props: IProps) => {
   const { idx, img, addImgs, deleteImg } = props
 
   useEffect(() => {
-    if (img && window.URL) {
+    if (img) {
       // let reader = new FileReader()
       // reader.readAsDataURL(img)
       // reader.onload = (e) => {
       //   setPath(e.target.result)
       // }
-      const url = URL.createObjectURL(img)
-      setPath(url)
+      // const url = URL.createObjectURL(img)
+      setPath(img)
     }
   }, [img])
 
@@ -57,7 +53,14 @@ export const ImageSelectThumbnail = (props: IProps) => {
       message.error('请选择图片文件')
       inputRef.value = ''
     } else {
-      addImgs(file, idx)
+      // addImgs(file, idx)
+      let params = new FormData()
+      params.append('img', file)
+      uploadImg(params).then(res => {
+        if (res.errcode === 0) {
+          addImgs(res.img_url, idx)
+        }
+      })
     }
   }
   
@@ -70,7 +73,7 @@ export const ImageSelectThumbnail = (props: IProps) => {
           { path && <div style={{ backgroundImage: `url(${path})` }} /> }
           { path && deleteImg &&  <i className='iconfont icon-delete1' onClick={() => deleteImg(idx)} /> }
         </label>
-        { path && <p>{  img && img.name || '' }</p> }
+        {/* { path && <p>{  img && img.name || '' }</p> } */}
       </div>
     </div>
   )
@@ -86,11 +89,11 @@ const ImageSelect = (props: Props) => {
   
   return (
     <div className='img-select-box'>
-      <img src={LeftImg} style={{ position: 'absolute', left: '-1px', top: '-1px' }} />
+      <img src='http://localhost:4000/static/left.png' style={{ position: 'absolute', left: '-1px', top: '-1px' }} />
       {
         imgIdxs.map(item => <ImageSelectThumbnail key={item} idx={item} img={imgs[item] || null} addImgs={addImgs} deleteImg={deleteImg} /> )
       }
-      <img src={RightImg} style={{ position: 'absolute', right: '-1px', bottom: '-1px' }} />
+      <img src='http://localhost:4000/static/right.png' style={{ position: 'absolute', right: '-1px', bottom: '-1px' }} />
     </div>
   )
 }

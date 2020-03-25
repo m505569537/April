@@ -13,6 +13,9 @@ module.exports = {
       obj[item.name] = item.value
     })
     return obj
+  },
+  'deleteCookie': (name) => {
+    nw.Window.get().cookies.remove({ name, url: 'http://localhost' })
   }
 }
 

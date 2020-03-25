@@ -21,5 +21,13 @@ export const userRegister = (params: object) => axios.post('/register', params)
 // token自动登录
 export const autoLogin = (params: object) => axios.get('/getUser', { params })
 
+// utils
+// upload img
+export const uploadImg = (params: object) => axios.post('/uploadImg', params)
+// upload video
+export const uploadVde = (params: object) => axios.post('/uploadVde', params)
+
 // Seed
-export const addSeed = (params: any) => axios.post('/addSeed', params)
+export const addSeed = (params: object) => axios.post('/addSeed', params)
+export const deleteSeed = (params: object) => axios.post('/deleteSeed', params)
+export const getSeeds = (params: object) => axios.get('/getSeeds', { params })

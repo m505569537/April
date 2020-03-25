@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react'
 import cx from 'classnames'
 import { Switch, Route, withRouter, Redirect } from 'react-router-dom'
 
-import Cookies from '../../utils/cookies'
+// import Cookies from '../../utils/cookies'
+import { getCookies, deleteCookie } from '../../utils'
 import Seed from '@/Seed'
 import { autoLogin } from '&/api'
 import './style.less'
@@ -38,14 +39,7 @@ const Layout = (props: Props) => {
   }
 
   const getToken = async () => {
-    // const win = nw.Window.get()
-    // win.cookies.getAll({}, (cookies) => {
-    //   console.log(cookies)
-    // })
-    let obj:any = {}
-    const cookies = await Cookies.getAll()
-    obj = Cookies.parseObj(cookies)
-    const token = obj.token
+    const token = await getCookies('token')
     if (!token) {
       props.history.push('/loginandregister')
     } else {
@@ -56,6 +50,7 @@ const Layout = (props: Props) => {
         if (res.errcode == 0) {
           setUser(res.data)
         } else {
+          deleteCookie('token')
           message.error(res.message)
           setTimeout(() => {
             props.history.push('/loginandregister')

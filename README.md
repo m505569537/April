@@ -2,8 +2,9 @@
 + React
 + typescript
 + less
-+ node
++ koa
 + nwjs
++ webpack
 
 ## tips
 + nwjs的任务栏icon需要128*128的png文件，其它的不行

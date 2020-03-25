@@ -40,11 +40,12 @@ const LoginAndRegister = (props: Props) => {
       message.error('请添加头像')
       return
     }
-    let params = new FormData()
-    params.append('username', username)
-    params.append('email', email)
-    params.append('pwd', pwd)
-    params.append('avatar', img)
+    const params = {
+      username,
+      email,
+      pwd,
+      avatar: img
+    }
     userRegister(params).then(res => {
       if (res.errcode == 0) {
         history.push('/home')
@@ -91,10 +92,10 @@ const LoginAndRegister = (props: Props) => {
         <Input value={username} onChange={e => setUsername(e.target.value)} />
       </FormItem>
       <FormItem label='密码'>
-        <Input value={pwd} onChange={e => setPwd(e.target.value)} />
+        <Input value={pwd} type='password' onChange={e => setPwd(e.target.value)} />
       </FormItem>
       <FormItem label='确认密码'>
-        <Input value={pwd2} onChange={e => setPwd2(e.target.value)} />
+        <Input value={pwd2} type='password' onChange={e => setPwd2(e.target.value)} />
       </FormItem>
       <FormItem label='选择头像'>
         <ImageSelectThumbnail  img={img} idx={-2} addImgs={addImgs} />

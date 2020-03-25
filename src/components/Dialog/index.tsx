@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react'
 import cx from 'classnames'
 import { Input, Button } from 'antd'
 
+import { getCookies } from '../../utils'
 import ImageSelect from '../ImageSelect'
 import VideoSelect from '../VideoSelect'
+import Loading from '../Loading'
 import './style.less'
 
 const { TextArea } = Input
@@ -13,6 +15,7 @@ interface Props {
   type: string;
   onClose: any;
   onSubmit: any;
+  loading: boolean;
 }
 
 const styleObj = {
@@ -26,6 +29,8 @@ const styleObj = {
 
 const Dialog = (props: Props) => {
 
+  const { visible, type, onClose, onSubmit, loading } = props
+
   const [ title, setTilte ] = useState('')
   const [ content, setContent ] = useState('')
 
@@ -33,11 +38,9 @@ const Dialog = (props: Props) => {
   const [ showImgs, setShowImgs ] = useState(false)
   const imgsMaxNum = 5  // 限制图片数量
 
-  const [ vdes, setVdes ] = useState<any>({})
+  const [ vdes, setVdes ] = useState({})
   const [ showVdes, setShowVdes ] = useState(false)
   const vdesMaxNum = 3  // 限制视频数量
-
-  const { visible, type, onClose } = props
 
   const toggleImgs = () => {
     setShowImgs(true)
@@ -80,8 +83,19 @@ const Dialog = (props: Props) => {
       let tmpIdx = idxArr.length > 0 ? (parseInt(idxArr[idxArr.length - 1]) + 1) : 0
       tmpVdes[tmpIdx] = vde
     }
-    console.log('sd', tmpVdes)
     setVdes(tmpVdes)
+  }
+
+  const handleClick = async () => {
+    const token = await getCookies('token')
+    const params = {
+      token,
+      title,
+      content,
+      imgs: Object.values(imgs),
+      vdes: Object.values(vdes)
+    }
+    onSubmit(params)
   }
   
   return (
@@ -113,9 +127,10 @@ const Dialog = (props: Props) => {
             </div>
           </div>
           <div className='place-holder'>
-            <Button type='primary' className='sticky-btn'>Submit</Button>
+            <Button type='primary' className='sticky-btn' onClick={handleClick}>Submit</Button>
           </div>
         </div>
+        <Loading loading={loading} />
       </div>
     </div>
   )

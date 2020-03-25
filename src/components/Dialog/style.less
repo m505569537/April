@@ -1,8 +1,8 @@
 .dialog-cover {
-  position: absolute;
+  position: fixed;
   right: 0;
   top: 0;
-  width: 100%;
+  width: calc(~'100%' - 230px);
   height: 100vh;
   z-index: 99;
   background-color: rgba(0, 0, 0, .2);
@@ -41,8 +41,9 @@
     .icon-close {
       font-size: 25px;
       position: absolute;
-      right: 15px;
+      right: 16px;
       top: 5px;
+      z-index: 99;
       cursor: pointer;
       transition: all .2s;
       &:hover {

@@ -5,7 +5,7 @@ const userSchema = mongoose.Schema({
   userid: { type: Number, required: true },
   username: { type: String, required: true },
   pwd: { type: String, required: true },
-  avatar: { type: String },
+  avatar: { type: String, required: true },
   email: { type: String, required: true }
 })
 
@@ -15,7 +15,7 @@ exports.UserModel = UserModel
 
 // seed页
 const seedInfoSchema = mongoose.Schema({
-  userid: { type: Number, required: true },
+  token: { type: String, required: true },
   title: { type: String, required: true },
   content: { type: String, required: true },
   imgs: { type: Array },

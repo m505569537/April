@@ -1,0 +1,73 @@
+.loading-box {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 6;
+  background-color: rgba(199, 199, 199, .2);
+  .line-list {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    div {
+      width: 3px;
+      background-color: #adabab;
+      border-radius: 3px;
+      margin: 0 2px;
+    }
+    .line-0 {
+      // height: 3px;
+      animation: wave0 0.5s linear alternate infinite;
+    }
+    .line-1 {
+      // height: 5px;
+      animation: wave1 1s linear infinite;
+    }
+    .line-2 {
+      // height: 7px;
+      animation: wave2 0.5s linear alternate infinite;
+    }
+    .line-3 {
+      // height: 5px;
+      animation: wave3 1s linear infinite;
+    }
+    .line-4 {
+      // height: 3px;
+      animation: wave4 0.5s linear alternate infinite;
+    }
+  }
+}
+
+@keyframes wave0 {
+  from { height: 10px; }
+  to { height: 30px; }
+}
+
+@keyframes wave1 {
+  0% { height: 20px; }
+  25% { height: 30px; }
+  50% { height: 20px; }
+  75% { height: 10px; }
+  100% { height: 20px; }
+}
+@keyframes wave2 {
+  from { height: 30px; }
+  to { height: 10px; }
+}
+@keyframes wave3 {
+  0% { height: 20px; }
+  25% { height: 10px; }
+  50% { height: 20px; }
+  75% { height: 30px; }
+  100% { height: 20px; }
+}
+@keyframes wave4 {
+  from { height: 10px; }
+  to { height: 30px; }
+}
