@@ -3,6 +3,7 @@ import { message } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 
 import { uploadImg } from '&/api'
+import { getTrueName } from '../../utils'
 import './style.less'
 
 
@@ -27,20 +28,7 @@ interface IProps {
 
 export const ImageSelectThumbnail = (props: IProps) => {
   let inputRef:any
-  const [ path, setPath ] = useState<any>('')
   const { idx, img, addImgs, deleteImg } = props
-
-  useEffect(() => {
-    if (img) {
-      // let reader = new FileReader()
-      // reader.readAsDataURL(img)
-      // reader.onload = (e) => {
-      //   setPath(e.target.result)
-      // }
-      // const url = URL.createObjectURL(img)
-      setPath(img)
-    }
-  }, [img])
 
   const getFile = () => {
     const file = inputRef.files[0]
@@ -72,10 +60,10 @@ export const ImageSelectThumbnail = (props: IProps) => {
         <input id={"upload_img" + idx} type='file' ref={input => inputRef = input} onChange={getFile} />
         <label htmlFor={"upload_img" + idx}>
           <PlusOutlined style={{ fontSize: '40px', color: '#999999' }} />
-          { path && <div style={{ backgroundImage: `url(${path})` }} /> }
-          { path && deleteImg &&  <i className='iconfont icon-delete1' onClick={() => deleteImg(idx)} /> }
+          { img && <div style={{ backgroundImage: `url(${img})` }} /> }
+          { img && deleteImg &&  <i className='iconfont icon-delete1' onClick={() => deleteImg(idx)} /> }
         </label>
-        {/* { path && <p>{  img && img.name || '' }</p> } */}
+        { img && <p>{  img && getTrueName(img) }</p> }
       </div>
     </div>
   )

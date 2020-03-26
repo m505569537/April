@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Spin, message } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 
+import { getTrueName } from '../../utils'
 import { uploadVde } from '&/api'
 import './style.less'
 
@@ -9,27 +10,22 @@ interface Props {
   vdes: object;
   maxNum: number;
   addVdes: any;
+  deleteVde: any;
 }
 
 interface IProps {
   vde: any;
   idx: string|number;
   addVdes: any;
+  deleteVde: any;
 }
 
 const VideoPreview = (props: IProps) => {
   let inputRef
-  const [ path, setPath ] = useState<any>('')
+  const { vde, idx, addVdes, deleteVde } = props
+
   const [ loading, setLoading ] = useState(false)
 
-  const { vde, idx, addVdes } = props
-
-  useEffect(() => {
-    if (vde && window.URL) {
-      // setLoading(true)
-      setPath(vde)
-    }
-  }, [])
 
   const getFile = () => {
     const file = inputRef.files[0]
@@ -58,11 +54,12 @@ const VideoPreview = (props: IProps) => {
       <Spin className='video-load' spinning={loading}>
         <div className='video-select'>
           <input id={"upload_video" + idx} type='file' ref={input => inputRef = input} onChange={getFile} />
-          <label htmlFor={path ? '' : 'upload_video' + idx}>
-            { !path && <PlusOutlined style={{ fontSize: '40px', color: '#999999', position:'absolute', }} /> }
-            { path && <video src={path} controls />}
-            { path &&  <i className='iconfont icon-delete1' /> }
+          <label htmlFor={vde ? '' : 'upload_video' + idx}>
+            { !vde && <PlusOutlined style={{ fontSize: '40px', color: '#999999', position:'absolute', }} /> }
+            { vde && <video src={vde} controls />}
+            { vde && deleteVde && <i className='iconfont icon-delete1' onClick={() => deleteVde(idx)} /> }
           </label>
+          { vde && <p>{ vde && getTrueName(vde) }</p> }
         </div>
       </Spin>
     </div>
@@ -70,7 +67,7 @@ const VideoPreview = (props: IProps) => {
 }
 
 const VideoSelect = (props: Props) => {
-  const { vdes, maxNum, addVdes } = props
+  const { vdes, maxNum, addVdes, deleteVde } = props
 
   const vdeIdxs = Object.keys(vdes)
   if (vdeIdxs.length < maxNum) {
@@ -80,7 +77,7 @@ const VideoSelect = (props: Props) => {
   return (
     <div className='video-select-box'>
       {
-        vdeIdxs.map(item => <VideoPreview key={item} vde={vdes[item] || null} idx={item} addVdes={addVdes} />)
+        vdeIdxs.map(item => <VideoPreview key={item} vde={vdes[item] || null} idx={item} addVdes={addVdes} deleteVde={deleteVde} />)
       }
     </div>
   )

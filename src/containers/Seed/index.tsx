@@ -11,6 +11,7 @@ import { message } from 'antd'
 import Dialog from '#/Dialog'
 import Card from '#/Card'
 import NoDataCard from '#/NoDataCard'
+import CustomChart from '#/Chart'
 import { addSeed, getSeeds } from '&/api'
 import { getCookies } from '../../utils'
 import './style.less'
@@ -79,11 +80,14 @@ const Seed = () => {
     <div className='seed'>
       <nav>筛选框</nav>
       <div className='drips'>
-        <div style={{ width: '70%' }}>
+        <div className='seed-list'>
           {
             data && data.length > 0 ? data.map(item => <Card key={item._id} detail={item} getSeedsList={getSeedsList} />) : <NoDataCard />
           }
         </div>
+        {/* <div className='g2-chart'>
+          <CustomChart />
+        </div> */}
       </div>
       <div className='add-seed' onClick={holdingSeed}>
         <i className='iconfont icon-hand-holding-seedling' />

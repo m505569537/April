@@ -86,6 +86,15 @@ const Dialog = (props: Props) => {
     setVdes(tmpVdes)
   }
 
+  const deleteVde = (idx: string|number) => {
+    const tmpVdes = { ...vdes }
+    delete tmpVdes[idx]
+    if (Object.keys(tmpVdes).length == 0) {
+      setShowVdes(false)
+    }
+    setVdes(tmpVdes)
+  }
+
   const handleClick = async () => {
     const token = await getCookies('token')
     const params = {
@@ -123,7 +132,7 @@ const Dialog = (props: Props) => {
             </div>
             <div className='media-box'>
               { showImgs && <ImageSelect maxNum={imgsMaxNum} imgs={imgs} addImgs={addImgs} deleteImg={deleteImg} /> }
-              { showVdes && <VideoSelect maxNum={vdesMaxNum} vdes={vdes} addVdes={addVdes} /> }
+              { showVdes && <VideoSelect maxNum={vdesMaxNum} vdes={vdes} addVdes={addVdes} deleteVde={deleteVde} /> }
             </div>
           </div>
           <div className='place-holder'>

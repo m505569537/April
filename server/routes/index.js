@@ -15,8 +15,9 @@ let imgStorage = multer.diskStorage({
   },
   // 修改文件名称
   filename: function (req, file, cb) {
-    let fileFormat = (file.originalname).split('.')
-    const finalName = Date.now() + '.' + fileFormat[fileFormat.length - 1]
+    // let fileFormat = (file.originalname).split('.')
+    // const finalName = Date.now() + '.' + fileFormat[fileFormat.length - 1]
+    const finalName = Date.now() + '.' + file.originalname
     img_url = 'http://localhost:4000/images/' + finalName
     cb(null, finalName)
   }
@@ -36,8 +37,8 @@ let vdeStorage = multer.diskStorage({
     cb(null, path.resolve(__dirname, '../public/videos'))
   },
   filename: function (req, file, cb) {
-    let fileFormat = file.originalname.split('.')
-    const finalName = Date.now() + '.' + fileFormat[fileFormat.length - 1]
+    // let fileFormat = file.originalname.split('.')
+    const finalName = Date.now() + '.' + file.originalname
     vde_url = 'http://localhost:4000/videos/' + finalName
     cb(null, finalName)
   }

@@ -1,0 +1,91 @@
+.reimu {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  nav {
+    position: sticky;
+    z-index: 99;
+    top: 0;
+    padding: 10px 7px;
+    background-color: #efefef;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    .navbar {
+      display: inline-flex;
+      flex: 1;
+      margin: 0;
+      padding: 0;
+      li {
+        position: relative;
+        list-style: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 10px;
+        transition: all .5s;
+        i {
+          font-size: 20px;
+        }
+        span {
+          font-size: 15px;
+        }
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 0;
+          border-bottom: 2px solid @primary-color;
+          transform-origin: 0 0;
+          // transform: scale(.5);
+          box-sizing: border-box;
+          transition: all .5s;
+        }
+      }
+      .active {
+        color: @primary-color;
+        &::after {
+          width: 100%;
+        }
+      }
+    }
+    .add-collection {
+      margin-right: 30px;
+      padding: 0 10px;
+      font-size: 20px;
+      position: relative;
+      .drop-down-box {
+        position: absolute;
+        background-color: #efefef;
+        // box-shadow: 0 0 9px 0 #d0cece;
+        box-shadow: 0 0 15px 1px #cac9c9;
+        width: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        padding-bottom: 5px;
+        border-radius: 0 0 20px 20px;
+        height: 0;
+        overflow: hidden;
+        opacity: 0;
+        transition: all .5s;
+        p {
+          margin: 5px 0;
+          text-align: center;
+          &:hover > i {
+            color: red;
+          }
+          i {
+            font-size: 20px;
+            transition: all .3s;
+          }
+        }
+      }
+      .active {
+        height: 118px;
+        opacity: 1;
+      }
+    }
+  }
+}

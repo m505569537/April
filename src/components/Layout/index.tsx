@@ -5,6 +5,7 @@ import { Switch, Route, withRouter, Redirect } from 'react-router-dom'
 // import Cookies from '../../utils/cookies'
 import { getCookies, deleteCookie } from '../../utils'
 import Seed from '@/Seed'
+import Reimu from '@/Reimu'
 import { autoLogin } from '&/api'
 import './style.less'
 import { message } from 'antd'
@@ -30,6 +31,12 @@ const Layout = (props: Props) => {
       icon: 'icon-flower',
       path: '/flower',
       component: Seed
+    },
+    {
+      label: 'Reimu',
+      icon: 'icon-landmark-japan-shrine',
+      path: '/reimu',
+      component: Reimu
     }
   ]
 
