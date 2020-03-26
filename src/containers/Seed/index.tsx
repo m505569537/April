@@ -77,8 +77,8 @@ const Seed = () => {
   
   return (
     <div className='seed'>
+      <nav>筛选框</nav>
       <div className='drips'>
-        <nav>筛选框</nav>
         <div style={{ width: '70%' }}>
           {
             data && data.length > 0 ? data.map(item => <Card key={item._id} detail={item} getSeedsList={getSeedsList} />) : <NoDataCard />

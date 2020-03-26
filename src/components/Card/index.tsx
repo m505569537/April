@@ -37,8 +37,8 @@ const Card = (props: Props) => {
       </div>
       <div className='card-content-box'>
         <div className='content'>{ detail.content }</div>
-        <div className='imgs'>{ detail.imgs.length > 0 && detail.imgs.map(item => <div key={item} style={{ backgroundImage: `url(${item})` }} />) }</div>
-        <div className='vdes'>{ detail.vdes.length > 0 && detail.vdes.map(item => <video key={item} src={item} controls>暂不支持该视频格式</video>) }</div>
+        { detail.imgs.length > 0 && <div className='imgs'>{ detail.imgs.map(item => <div key={item} style={{ backgroundImage: `url(${item})` }} />) }</div> }
+        { detail.vdes.length > 0 && <div className='vdes'>{ detail.vdes.map(item => <video key={item} src={item} controls>暂不支持该视频格式</video>) }</div> }
       </div>
     </div>
   )

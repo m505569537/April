@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { Spin, Upload, Button, message } from 'antd'
-import { PlusOutlined, UploadOutlined } from '@ant-design/icons'
+import { Spin, message } from 'antd'
+import { PlusOutlined } from '@ant-design/icons'
 
 import { uploadVde } from '&/api'
 import './style.less'
@@ -46,6 +46,7 @@ const VideoPreview = (props: IProps) => {
       params.append('vde', file)
       uploadVde(params).then(res => {
         if (res.errcode === 0) {
+          inputRef.value = ''
           addVdes(res.vde_url, idx)
         }
       })
@@ -58,7 +59,7 @@ const VideoPreview = (props: IProps) => {
         <div className='video-select'>
           <input id={"upload_video" + idx} type='file' ref={input => inputRef = input} onChange={getFile} />
           <label htmlFor={path ? '' : 'upload_video' + idx}>
-            <PlusOutlined style={{ fontSize: '40px', color: '#999999' }} />
+            { !path && <PlusOutlined style={{ fontSize: '40px', color: '#999999', position:'absolute', }} /> }
             { path && <video src={path} controls />}
             { path &&  <i className='iconfont icon-delete1' /> }
           </label>

@@ -58,6 +58,8 @@ export const ImageSelectThumbnail = (props: IProps) => {
       params.append('img', file)
       uploadImg(params).then(res => {
         if (res.errcode === 0) {
+          // 每次上传成功就清除掉input中的内容，以允许连续上传相同的文件
+          inputRef.value = ''
           addImgs(res.img_url, idx)
         }
       })

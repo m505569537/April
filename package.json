@@ -9,8 +9,8 @@
         "server": "nodemon server/app.js"
     },
     "window": {
-        "title": "小x",
-        "icon": "./icon.png",
+        "title": "April",
+        "icon": "icon.png",
         "toolbar": true,
         "frame": true,
         "width": 1180,
@@ -23,6 +23,7 @@
     "author": "xu",
     "license": "ISC",
     "dependencies": {
+        "@antv/g2": "^4.0.3",
         "@babel/core": "^7.8.6",
         "@babel/plugin-proposal-class-properties": "^7.8.3",
         "@babel/preset-env": "^7.8.6",
