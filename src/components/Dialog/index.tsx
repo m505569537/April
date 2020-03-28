@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import cx from 'classnames'
 import { Input, Button } from 'antd'
 
-import { getCookies } from '../../utils'
 import ImageSelect from '../ImageSelect'
 import VideoSelect from '../VideoSelect'
 import Loading from '../Loading'
@@ -95,10 +94,8 @@ const Dialog = (props: Props) => {
     setVdes(tmpVdes)
   }
 
-  const handleClick = async () => {
-    const token = await getCookies('token')
+  const handleClick = () => {
     const params = {
-      token,
       title,
       content,
       imgs: Object.values(imgs),

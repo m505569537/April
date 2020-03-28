@@ -50,10 +50,7 @@ const Layout = (props: Props) => {
     if (!token) {
       props.history.push('/loginandregister')
     } else {
-      const params = {
-        token
-      }
-      autoLogin(params).then(res => {
+      autoLogin().then(res => {
         if (res.errcode == 0) {
           setUser(res.data)
         } else {

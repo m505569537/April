@@ -23,6 +23,7 @@
         align-items: center;
         justify-content: center;
         padding: 0 10px;
+        cursor: default;
         transition: all .5s;
         i {
           font-size: 20px;
@@ -73,12 +74,15 @@
         p {
           margin: 5px 0;
           text-align: center;
-          &:hover > i {
+          &:hover  i {
             color: red;
           }
-          i {
-            font-size: 20px;
-            transition: all .3s;
+          label {
+            display: block;
+            i {
+              font-size: 20px;
+              transition: all .3s;
+            }
           }
         }
       }
@@ -87,5 +91,10 @@
         opacity: 1;
       }
     }
+  }
+  .files-box {
+    display: flex;
+    flex-wrap: wrap;
+    padding-top: 20px;
   }
 }

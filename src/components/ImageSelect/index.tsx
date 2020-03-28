@@ -63,7 +63,8 @@ export const ImageSelectThumbnail = (props: IProps) => {
           { img && <div style={{ backgroundImage: `url(${img})` }} /> }
           { img && deleteImg &&  <i className='iconfont icon-delete1' onClick={() => deleteImg(idx)} /> }
         </label>
-        { img && <p>{  img && getTrueName(img) }</p> }
+        {/* { img && <p><a href={img} download={getTrueName(img)}>{  img && getTrueName(img) }</a></p> } */}
+        { img && <p>{ img && getTrueName(img) }</p> }
       </div>
     </div>
   )

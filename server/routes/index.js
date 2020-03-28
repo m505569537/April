@@ -2,9 +2,20 @@ const fs = require('fs')
 const path = require('path')
 const router = require('koa-router')()
 const multer = require('koa-multer')
-const { UserModel, SeedInfoModel } = require('../db/models')
+const { UserModel, SeedInfoModel, PlatformModel } = require('../db/models')
 
 const filter = { pwd: 0, __v:0 }
+
+const deleteFile = (url) => {
+  const tmpPath = url.replace('http://localhost:4000/','../public/')
+  if (fs.existsSync(path.resolve(__dirname, tmpPath))) {
+    fs.unlinkSync(path.resolve(__dirname, tmpPath))
+  }
+}
+
+const clearBlankFields = (str) => {
+  return str.replace(/\s*/g,"")
+}
 
 // 策略1: 上传图片
 let img_url = ''
@@ -17,7 +28,7 @@ let imgStorage = multer.diskStorage({
   filename: function (req, file, cb) {
     // let fileFormat = (file.originalname).split('.')
     // const finalName = Date.now() + '.' + fileFormat[fileFormat.length - 1]
-    const finalName = Date.now() + '.' + file.originalname
+    const finalName = clearBlankFields(Date.now() + '.' + file.originalname)
     img_url = 'http://localhost:4000/images/' + finalName
     cb(null, finalName)
   }
@@ -38,7 +49,7 @@ let vdeStorage = multer.diskStorage({
   },
   filename: function (req, file, cb) {
     // let fileFormat = file.originalname.split('.')
-    const finalName = Date.now() + '.' + file.originalname
+    const finalName = clearBlankFields(Date.now() + '.' + file.originalname)
     vde_url = 'http://localhost:4000/videos/' + finalName
     cb(null, finalName)
   }
@@ -48,6 +59,78 @@ let uploadVde = multer({ storage: vdeStorage })
 // upload video
 router.post('/uploadVde', uploadVde.single('vde'), async (ctx, next) => {
   ctx.body = vde_url ? { errcode: 0, vde_url } : { errcode: 1, message: '视频上传失败，请重试' }
+})
+
+// 策略3: 不分类
+const imgSuffix = /(jpg|png|jpeg|gif)/
+const vdeSuffix = /(avi|rmvb|flv|mp4|wmv|mkv)/
+let tmp_url = []
+let fileStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const fileFormat = file.originalname.split('.')
+    if (imgSuffix.test(fileFormat[fileFormat.length - 1])) {
+      cb(null, path.resolve(__dirname, '../public/platform/images'))
+    } else if (vdeSuffix.test(fileFormat[fileFormat.length - 1])) {
+      cb(null, path.resolve(__dirname, '../public/platform/videos'))
+    } else {
+      cb(null, path.resolve(__dirname, '../public/platform/files'))
+    }
+  },
+  filename: (req, file, cb) => {
+    const finalName = clearBlankFields(Date.now() + '.' + file.originalname)
+    const fileFormat = file.originalname.split('.')
+    if (imgSuffix.test(fileFormat[fileFormat.length - 1])) {
+      tmp_url.push('http://localhost:4000/platform/images/' + finalName)
+    } else if (vdeSuffix.test(fileFormat[fileFormat.length - 1])) {
+      tmp_url.push('http://localhost:4000/platform/videos/' + finalName)
+    } else {
+      tmp_url.push('http://localhost:4000/platform/files/' + finalName)
+    }
+    cb(null, finalName)
+  }
+})
+let uploadFile = multer({ storage: fileStorage })
+
+router.post('/uploadFiles', uploadFile.array('files'), async (ctx, next) => {
+  // console.log('url', tmp_url)
+  const { type } = ctx.req.body
+  const token = ctx.cookies.get('token')
+  let errcode, message
+  let tmp_obj = []
+  if (tmp_url.length > 0) {
+    tmp_url.forEach(item => {
+      tmp_obj.push({
+        url: item,
+        type
+      })
+    })
+    tmp_url = []
+    const platform = await PlatformModel.findOne({ token })
+    if (platform) {
+      try {
+        await PlatformModel.updateOne({ token }, { files: platform.files.concat(tmp_obj) })
+        errcode = 0
+        message = '上传成功' + tmp_obj.length + '项'
+      } catch (error) {
+        errcode = 1
+        message = '上传失败'
+      }
+    } else {
+      const newPlatform = new PlatformModel({ token, files: tmp_obj })
+      try {
+        await newPlatform.save()
+        errcode = 0
+        message = '上传成功' + tmp_obj.length + '项'
+      } catch (error) {
+        errcode = 1
+        message = '上传失败'
+      }
+    }
+  } else {
+    errcode = 1
+    message = '上传失败'
+  }
+  ctx.body = { errcode, message }
 })
 
 
@@ -110,7 +193,7 @@ router.post('/register', async (ctx, next) => {
 
 // 通过token自动登录获取用户信息
 router.get('/getUser', async (ctx, next) => {
-  const { token } = ctx.request.query
+  const token = ctx.cookies.get('token')
   let errcode = 1, data, message
   const user = await UserModel.findOne({ _id: token }, filter)
   if (user) {
@@ -124,8 +207,8 @@ router.get('/getUser', async (ctx, next) => {
 
 // 添加seeds
 router.post('/addSeed', async (ctx, next) => {
-  const { token, title, content, imgs, vdes } = ctx.request.body
-  console.log(token)
+  const { title, content, imgs, vdes } = ctx.request.body
+  const token = ctx.cookies.get('token')
   let errcode = 1, message = '添加失败'
   const now = (new Date().toLocaleDateString()).replace(/\//g, '-') + ' ' + new Date().toString().substring(16,24)
   const seed = new SeedInfoModel({ token, title, content, imgs, vdes, publish_date: now })
@@ -151,20 +234,10 @@ router.post('/deleteSeed', async (ctx, next) => {
     message = '删除失败'
   } else {
     if (detail.imgs.length > 0) {
-      detail.imgs.forEach(img => {
-        const tmpPath = img.replace('http://localhost:4000/','../public/')
-        if (fs.existsSync(path.resolve(__dirname, tmpPath))) {
-          fs.unlinkSync(path.resolve(__dirname, tmpPath))
-        }
-      })
+      detail.imgs.forEach(img => deleteFile(img))
     }
     if (detail.vdes.length > 0) {
-      detail.vdes.forEach(vde => {
-        const tmpPath = vde.replace('http://localhost:4000/','../public/')
-        if (fs.existsSync(path.resolve(__dirname, tmpPath))) {
-          fs.unlinkSync(path.resolve(__dirname, tmpPath))
-        }
-      })
+      detail.vdes.forEach(vde => deleteFile(vde))
     }
     errcode = 0
     message = '删除成功'
@@ -175,7 +248,7 @@ router.post('/deleteSeed', async (ctx, next) => {
 
 // 获取seeds列表
 router.get('/getSeeds', async (ctx, next) => {
-  const { token } = ctx.request.query
+  const token = ctx.cookies.get('token')
   let errcode, message, data
   const seeds = await SeedInfoModel.find({ token }, filter)
   if (seeds) {
@@ -186,6 +259,44 @@ router.get('/getSeeds', async (ctx, next) => {
     message = '请添加你的seed吧'
   }
   ctx.body = errcode === 0 ? { errcode, data } : { errcode, message }
+})
+
+// 获取图床数据
+router.get('/getPlatform', async (ctx, next) => {
+  const { type } = ctx.request.query
+  const token = ctx.cookies.get('token')
+  let errcode = 1, message, data
+  const platform = await PlatformModel.findOne({ token }, filter)
+  if (platform) {
+    errcode = 0
+    if (type == 'all') {
+      data = platform.files.reverse()
+    } else {
+      data = platform.files.filter(item => item.type == type).reverse()
+    }
+  } else {
+    errcode = 1
+    message = '暂无数据'
+  }
+  ctx.body = errcode === 0 ? { errcode, data } : { errcode, message }
+})
+
+// 删除图床中的文件
+router.post('/deleteFile', async (ctx, next) => {
+  const { url } = ctx.request.body
+  const token = ctx.cookies.get('token')
+  let errcode = 1, message
+  const platform = await PlatformModel.findOne({ token })
+  if (platform) {
+    let files = platform.files.filter(item => item.url != url)
+    deleteFile(url)
+    await PlatformModel.updateOne({ token }, { files })
+    errcode = 0
+    message = '删除成功'
+  } else {
+    message = '删除失败'
+  }
+  ctx.body = { errcode, message }
 })
 
 module.exports = router

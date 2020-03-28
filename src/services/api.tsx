@@ -26,8 +26,14 @@ export const autoLogin = (params: object) => axios.get('/getUser', { params })
 export const uploadImg = (params: object) => axios.post('/uploadImg', params)
 // upload video
 export const uploadVde = (params: object) => axios.post('/uploadVde', params)
+// upload files
+export const uploadFiles = (params: object) => axios.post('/uploadFiles', params)
 
 // Seed
 export const addSeed = (params: object) => axios.post('/addSeed', params)
 export const deleteSeed = (params: object) => axios.post('/deleteSeed', params)
-export const getSeeds = (params: object) => axios.get('/getSeeds', { params })
+export const getSeeds = () => axios.get('/getSeeds')
+
+// platform
+export const getPlatform = (params: object) => axios.get('/getPlatform', { params })
+export const deleteFile = (params: object) => axios.post('/deleteFile', params)

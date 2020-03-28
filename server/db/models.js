@@ -26,3 +26,13 @@ const seedInfoSchema = mongoose.Schema({
 const SeedInfoModel = new mongoose.model('seeds', seedInfoSchema)
 
 exports.SeedInfoModel = SeedInfoModel
+
+// platform
+const platformSchema = mongoose.Schema({
+  token: { type: String, required: true },
+  files: { type: Array, required: true }
+})
+
+const PlatformModel = new mongoose.model('platforms', platformSchema)
+
+exports.PlatformModel = PlatformModel

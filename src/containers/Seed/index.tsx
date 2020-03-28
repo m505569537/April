@@ -30,12 +30,8 @@ const Seed = () => {
     setVisible(false)
   }
 
-  const getSeedsList = async () => {
-    const token = await getCookies('token')
-    const params = {
-      token
-    }
-    getSeeds(params).then(res => {
+  const getSeedsList = () => {
+    getSeeds().then(res => {
       if (res.errcode === 0) {
         setData(res.data)
       } else {

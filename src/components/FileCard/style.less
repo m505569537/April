@@ -1,0 +1,98 @@
+.file-card-box {
+  width: 260px;
+  margin: 0 20px;
+  .img-card {
+    width: 100%;
+    height: 150px;
+    position: relative;
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 0 0 8px 0 #d8d7d7;
+    .img-card-bg {
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: 50% 50%;
+      background-repeat: no-repeat;
+    }
+    & > a {
+      position: absolute;
+      display: block;
+      opacity: 0;
+      bottom: -25px;
+      right: 5px;
+      color: red;
+      font-size: 25px;
+      width: 50px;
+      height: 50px;
+      text-align: center;
+      line-height: 50px;
+      border-radius: 50%;
+      background-color: #fff;
+      box-shadow: 0 0 6px 0 #8e8e8e;
+      transition: all .5s;
+    }
+    &:hover > a {
+      bottom: 5px;
+      opacity: 1;
+    }
+  }
+  .video-card {
+    width: 100%;
+    height: 150px;
+    position: relative;
+    border-radius: 5px;
+    overflow: hidden;
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: fill;
+    }
+    .cover {
+      height: 100%;
+      width: 100%;
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      top: 0;
+      left: 0;
+      .play {
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: 50% 50%;
+        width: 50px;
+        height: 50px;
+        z-index: 2;
+      }
+      a {
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+      }
+    }
+  }
+  & > p {
+    position: relative;
+    width: 100%;
+    padding: 0 20px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    text-align: center;
+    margin-top: 10px;
+    & > i {
+      font-size: 16px;
+      position: absolute;
+      // color:red;
+      right: 5px;
+      cursor: pointer;
+      transition: all .5s;
+      &:hover {
+        color: red;
+      }
+    }
+  }
+}
