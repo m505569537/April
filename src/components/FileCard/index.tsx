@@ -81,7 +81,10 @@ const FileCard = (props: Props) => {
       )
     } else {
       return (
-        <div className='file-box'></div>
+        <div className='file-box'>
+          <div className='file-card-bg img-card-bg' style={{ backgroundImage: `url('http://localhost:4000/static/file_icon.png')`, backgroundSize: 'auto' }} />
+          <a href={url} download={getTrueName(url)}><DownloadOutlined /></a>
+        </div>
       )
     }
   }

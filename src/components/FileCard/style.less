@@ -1,13 +1,14 @@
 .file-card-box {
   width: 260px;
   margin: 0 20px;
-  .img-card {
-    width: 100%;
+  & > div {
     height: 150px;
     position: relative;
     border-radius: 5px;
     overflow: hidden;
     box-shadow: 0 0 8px 0 #d8d7d7;
+  }
+  .img-card, .file-box {
     .img-card-bg {
       width: 100%;
       height: 100%;
@@ -38,11 +39,6 @@
     }
   }
   .video-card {
-    width: 100%;
-    height: 150px;
-    position: relative;
-    border-radius: 5px;
-    overflow: hidden;
     video {
       width: 100%;
       height: 100%;

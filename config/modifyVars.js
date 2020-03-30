@@ -12,5 +12,6 @@ module.exports = {
   // @border-radius-base: 4px; // 组件/浮层圆角
   // @border-color-base: #d9d9d9; // 边框色
   // @box-shadow-base: 0 2px 8px rgba(0, 0, 0, 0.15); // 浮层阴影
-  '@seed-color': '#4daf0f' // seed相关色调
+  '@seed-color': '#4daf0f', // seed相关色调
+  '@reimu-color': '#f54343'
 }
