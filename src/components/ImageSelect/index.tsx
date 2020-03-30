@@ -26,6 +26,8 @@ interface IProps {
   deleteImg?: any;
 }
 
+const baseUrl = 'http://149.129.92.92:4000'
+
 export const ImageSelectThumbnail = (props: IProps) => {
   let inputRef:any
   const { idx, img, addImgs, deleteImg } = props
@@ -80,11 +82,11 @@ const ImageSelect = (props: Props) => {
   
   return (
     <div className='img-select-box'>
-      <img src='http://localhost:4000/static/left.png' style={{ position: 'absolute', left: '-1px', top: '-1px' }} />
+      <img src={baseUrl + '/static/left.png'} style={{ position: 'absolute', left: '-1px', top: '-1px' }} />
       {
         imgIdxs.map(item => <ImageSelectThumbnail key={item} idx={item} img={imgs[item] || null} addImgs={addImgs} deleteImg={deleteImg} /> )
       }
-      <img src='http://localhost:4000/static/right.png' style={{ position: 'absolute', right: '-1px', bottom: '-1px' }} />
+      <img src={baseUrl + '/static/right.png'} style={{ position: 'absolute', right: '-1px', bottom: '-1px' }} />
     </div>
   )
 }

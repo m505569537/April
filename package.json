@@ -6,7 +6,7 @@
     "scripts": {
         "build": "webpack --env=development -w",
         "start": "cd ../nwjs-sdk && nwjs.app/Contents/MacOS/nwjs ../April",
-        "server": "nodemon server/app.js"
+        "servered": "nodemon server/app.js"
     },
     "window": {
         "title": "April",

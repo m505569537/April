@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-axios.defaults.baseURL = 'http://localhost:4000'
+axios.defaults.baseURL = 'http://149.129.92.92:4000'
 
 axios.interceptors.request.use(config => {
   config.withCredentials = true

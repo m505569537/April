@@ -6,8 +6,10 @@ const { UserModel, SeedInfoModel, PlatformModel } = require('../db/models')
 
 const filter = { pwd: 0, __v:0 }
 
+const baseUrl = 'http://0.0.0.0:4000/'
+
 const deleteFile = (url) => {
-  const tmpPath = url.replace('http://localhost:4000/','../public/')
+  const tmpPath = url.replace(baseUrl,'../public/')
   if (fs.existsSync(path.resolve(__dirname, tmpPath))) {
     fs.unlinkSync(path.resolve(__dirname, tmpPath))
   }
@@ -29,7 +31,7 @@ let imgStorage = multer.diskStorage({
     // let fileFormat = (file.originalname).split('.')
     // const finalName = Date.now() + '.' + fileFormat[fileFormat.length - 1]
     const finalName = clearBlankFields(Date.now() + '.' + file.originalname)
-    img_url = 'http://localhost:4000/images/' + finalName
+    img_url = baseUrl + 'images/' + finalName
     cb(null, finalName)
   }
 })
@@ -50,7 +52,7 @@ let vdeStorage = multer.diskStorage({
   filename: function (req, file, cb) {
     // let fileFormat = file.originalname.split('.')
     const finalName = clearBlankFields(Date.now() + '.' + file.originalname)
-    vde_url = 'http://localhost:4000/videos/' + finalName
+    vde_url = baseUrl + 'videos/' + finalName
     cb(null, finalName)
   }
 })
@@ -80,11 +82,11 @@ let fileStorage = multer.diskStorage({
     const finalName = clearBlankFields(Date.now() + '.' + file.originalname)
     const fileFormat = file.originalname.split('.')
     if (imgSuffix.test(fileFormat[fileFormat.length - 1])) {
-      tmp_url.push('http://localhost:4000/platform/images/' + finalName)
+      tmp_url.push(baseUrl + 'platform/images/' + finalName)
     } else if (vdeSuffix.test(fileFormat[fileFormat.length - 1])) {
-      tmp_url.push('http://localhost:4000/platform/videos/' + finalName)
+      tmp_url.push(baseUrl + 'platform/videos/' + finalName)
     } else {
-      tmp_url.push('http://localhost:4000/platform/files/' + finalName)
+      tmp_url.push(baseUrl + 'platform/files/' + finalName)
     }
     cb(null, finalName)
   }

@@ -13,6 +13,8 @@ interface Props {
   updateData: any;
 }
 
+const baseurl = 'http://149.129.92.92:4000'
+
 const FileCard = (props: Props) => {
   let vde
   const { type, className, url, updateData } = props
@@ -74,7 +76,7 @@ const FileCard = (props: Props) => {
         <div className='video-card'>
           <video src={url} ref={video => vde = video}>浏览器不支持video标签</video>
           <div className='cover'>
-            <div className="play" style={{ backgroundImage: `url('http://localhost:4000/static/play.png')` }} onClick={toggleVde}></div>
+            <div className="play" style={{ backgroundImage: `url(${baseurl + '/static/play.png'})` }} onClick={toggleVde}></div>
             <a href={url} download={getTrueName(url)} />
           </div>
         </div>
@@ -82,7 +84,7 @@ const FileCard = (props: Props) => {
     } else {
       return (
         <div className='file-box'>
-          <div className='file-card-bg img-card-bg' style={{ backgroundImage: `url('http://localhost:4000/static/file_icon.png')`, backgroundSize: 'auto' }} />
+          <div className='file-card-bg img-card-bg' style={{ backgroundImage: `url(${baseurl + '/static/file_icon.png'})`, backgroundSize: 'auto' }} />
           <a href={url} download={getTrueName(url)}><DownloadOutlined /></a>
         </div>
       )
