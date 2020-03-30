@@ -1,6 +1,6 @@
 const path = require('path')
 const koa = require("koa")
-const staticServer = require('koa-static');
+const staticServer = require('koa-static')
 const bodyParser = require("koa-bodyparser")
 const cors = require("koa2-cors")
 const router = require("./routes")
