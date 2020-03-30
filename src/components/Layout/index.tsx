@@ -26,12 +26,12 @@ const Layout = (props: Props) => {
       path: '/seed',
       component: Seed
     },
-    {
-      label: 'Flower',
-      icon: 'icon-flower',
-      path: '/flower',
-      component: Seed
-    },
+    // {
+    //   label: 'Flower',
+    //   icon: 'icon-flower',
+    //   path: '/flower',
+    //   component: Seed
+    // },
     {
       label: 'Reimu',
       icon: 'icon-landmark-japan-shrine',
