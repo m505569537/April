@@ -6,7 +6,7 @@ const { UserModel, SeedInfoModel, PlatformModel } = require('../db/models')
 
 const filter = { pwd: 0, __v:0 }
 
-const baseUrl = 'http://0.0.0.0:4000/'
+const baseUrl = 'http://149.129.92.92:4000/'
 
 const deleteFile = (url) => {
   const tmpPath = url.replace(baseUrl,'../public/')
