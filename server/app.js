@@ -10,14 +10,13 @@ require("./db")
 const app = new koa()
 
 app.use(cors({
-  // origin: function(ctx) {
-  //   const whiteList = ['http://localhost:3000', 'http://localhost:8080']
-  //   if(whiteList.indexOf(ctx.request.header.origin) !== -1){
-  //     return ctx.request.header.origin
-  //   }
-  //   return '*'
-  // },
-  origin: () => '*',
+  origin: function(ctx) {
+    const whiteList = ['http://0.0.0.0:3000', 'http://0.0.0.0:8080']
+    if(whiteList.indexOf(ctx.request.header.origin) !== -1){
+      return ctx.request.header.origin
+    }
+    return '*'
+  },
   maxAge: 5,
   credentials: true,     //允许服务器发送cookie
   allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
