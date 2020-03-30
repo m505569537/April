@@ -17,6 +17,7 @@ app.use(cors({
   //   }
   //   return '*'
   // },
+  origin: () => '*',
   maxAge: 5,
   credentials: true,     //允许服务器发送cookie
   allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
