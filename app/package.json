@@ -1,0 +1,32 @@
+{
+  "name": "april",
+  "version": "1.0.0",
+  "description": "April is coming",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "window": {
+    "title": "April",
+    "icon": "icon.png",
+    "toolbar": true,
+    "frame": true,
+    "width": 1180,
+    "height": 724,
+    "position": "center",
+    "min_width": 400,
+    "min_height": 200
+},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "webkit": {
+    "plugin": false,
+    "java": false,
+    "page-cache": false
+},
+"permissions": [
+    "cookies"
+],
+"chromium-args": "--allow-file-access-from-files --disable-cookie-encryption"
+}
