@@ -6,7 +6,7 @@
     "scripts": {
         "build": "webpack --env=development -w",
         "start": "cd ../nwjs-sdk && nwjs.app/Contents/MacOS/nwjs ../April",
-        "servered": "nodemon server/app.js",
+        "server": "nodemon server/app.js",
         "dist": "build --tasks win-x64,mac-x64 --mirror https://npm.taobao.org/mirrors/nwjs/ ."
     },
     "window": {

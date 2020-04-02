@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 // 用户信息
 const userSchema = mongoose.Schema({
   userid: { type: Number, required: true },
+  openid: { type: String },
   username: { type: String, required: true },
   pwd: { type: String, required: true },
   avatar: { type: String, required: true },

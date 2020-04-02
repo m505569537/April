@@ -2,11 +2,15 @@ const fs = require('fs')
 const path = require('path')
 const router = require('koa-router')()
 const multer = require('koa-multer')
+const { getOpenid } = require('../services/api')
 const { UserModel, SeedInfoModel, PlatformModel } = require('../db/models')
 
 const filter = { pwd: 0, __v:0 }
 
 const baseUrl = 'http://149.129.92.92:4000/'
+
+const AppID = 'wx41bf4e47b0f837c8'
+const AppSecret = '0e728ede0158404c47636fc241f3ab4a'
 
 const deleteFile = (url) => {
   const tmpPath = url.replace(baseUrl,'../public/')
@@ -299,6 +303,20 @@ router.post('/deleteFile', async (ctx, next) => {
     message = '删除失败'
   }
   ctx.body = { errcode, message }
+})
+
+router.post('/getWeCode', async (ctx, next) => {
+  const { code } = ctx.request.body
+  const params = {
+    appid: AppID,
+    secret: AppSecret,
+    js_code: code,
+    grant_type: 'authorization_code'
+  }
+  getOpenid(params).then(res => {
+    console.log(res)
+  })
+  ctx.body = { errcode: 0 }
 })
 
 module.exports = router
