@@ -7,7 +7,8 @@ const { UserModel, SeedInfoModel, PlatformModel } = require('../db/models')
 
 const filter = { pwd: 0, __v:0 }
 
-const baseUrl = 'http://149.129.92.92:4000/'
+// const baseUrl = 'http://149.129.92.92:4000/'
+const baseUrl = 'http://144.34.168.7:4000/'
 
 const AppID = 'wx41bf4e47b0f837c8'
 const AppSecret = '0e728ede0158404c47636fc241f3ab4a'

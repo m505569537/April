@@ -11,7 +11,8 @@ const app = new koa()
 
 app.use(cors({
   origin: function(ctx) {
-    const whiteList = ['http://149.129.92.92:3000', 'http://149.129.92.92:8080']
+    // const whiteList = ['http://149.129.92.92:3000', 'http://149.129.92.92:8080']
+    const whiteList = ['http://144.34.168.7:3000', 'http://144.34.168.7:8080']
     if(whiteList.indexOf(ctx.request.header.origin) !== -1){
       return ctx.request.header.origin
     }
