@@ -7,8 +7,9 @@ const { UserModel, SeedInfoModel, PlatformModel } = require('../db/models')
 
 const filter = { pwd: 0, __v:0 }
 
+const baseUrl = 'http://localhost:4000/'
 // const baseUrl = 'http://149.129.92.92:4000/'
-const baseUrl = 'http://144.34.168.7:4000/'
+// const baseUrl = 'http://144.34.168.7:4000/'
 
 const AppID = 'wx41bf4e47b0f837c8'
 const AppSecret = '0e728ede0158404c47636fc241f3ab4a'
@@ -98,11 +99,60 @@ let fileStorage = multer.diskStorage({
 })
 let uploadFile = multer({ storage: fileStorage })
 
+const isExist = async (token) => {
+  const user = await UserModel.findOne({ _id: token })
+  if (!user) {
+    return false
+  } else {
+    return true
+  }
+}
+
+// 拦截客户端获取视频信息，以流的形式返回视频数据
+// router.get('/hhh/:name', async (ctx, next) => {
+//   // console.log('dsd',ctx.params.name)
+//   const { name } = ctx.params
+//   console.log(name)
+//   const vPath = path.resolve(__dirname, `../public/platform/videos/${name}`)
+//   let stat = fs.statSync(vPath)
+//   // console.log(stat)
+//   const fileSize = stat.size
+//   const range = ctx.request.headers['content-range']
+//   console.log(range)
+//   if (range) {
+//     let parts = range.replace(/bytes=/, "").split("-")
+//     let start = parseInt(parts[0], 10)
+//     let end = parts[1] ? parseInt(parts[1], 10) : start + 999999
+
+//     // end 在最后取值为 fileSize - 1 
+//     end = end > fileSize - 1 ? fileSize - 1 : end
+//     let chunksize = (end - start) + 1
+//     let file = fs.createReadStream(vPath, { start, end })
+//     ctx.status = 206
+//     ctx.set('Content-Range', `bytes ${start}-${end}/${fileSize}`)
+//     ctx.set('Accept-Ranges', 'bytes')
+//     ctx.set('Content-Length', chunksize)
+//     ctx.set('Content-Type', 'video/mp4')
+//     ctx.body = file
+//   } else {
+//     ctx.status = 206
+//     ctx.set('Content-Length',fileSize)
+//     ctx.set('Content-Type', 'video/mp4')
+//     ctx.body = fs.createReadStream(vPath)
+//   }
+// })
+
 router.post('/uploadFiles', uploadFile.array('files'), async (ctx, next) => {
   // console.log('url', tmp_url)
   const { type } = ctx.req.body
   const token = ctx.cookies.get('token')
   let errcode, message
+  let bool = await isExist(token)
+  if (!bool) {
+    // ctx.status = 401
+    ctx.body = { errcode: 401, message: '用户不存在，请重新登录' }
+    return
+  }
   let tmp_obj = []
   if (tmp_url.length > 0) {
     tmp_url.forEach(item => {
@@ -217,6 +267,12 @@ router.post('/addSeed', async (ctx, next) => {
   const { title, content, imgs, vdes } = ctx.request.body
   const token = ctx.cookies.get('token')
   let errcode = 1, message = '添加失败'
+  let bool = await isExist(token)
+  if (!bool) {
+    // ctx.status = 401
+    ctx.body = { errcode: 401, message: '用户不存在，请重新登录' }
+    return
+  }
   const now = (new Date().toLocaleDateString()).replace(/\//g, '-') + ' ' + new Date().toString().substring(16,24)
   const seed = new SeedInfoModel({ token, title, content, imgs, vdes, publish_date: now })
   if (seed) {
@@ -233,8 +289,15 @@ router.post('/addSeed', async (ctx, next) => {
 
 // 删除seeds
 router.post('/deleteSeed', async (ctx, next) => {
+  const token = ctx.cookies.get('token')
   const { detail } = ctx.request.body
   let errcode, message
+  let bool = await isExist(token)
+  if (!bool) {
+    // ctx.status = 401
+    ctx.body = { errcode: 401, message: '用户不存在，请重新登录' }
+    return
+  }
   const err = await SeedInfoModel.deleteOne({ _id: detail._id })
   if (err.ok == 0) {
     errcode = 1
@@ -257,6 +320,12 @@ router.post('/deleteSeed', async (ctx, next) => {
 router.get('/getSeeds', async (ctx, next) => {
   const token = ctx.cookies.get('token')
   let errcode, message, data
+  let bool = await isExist(token)
+  if (!bool) {
+    // ctx.status = 401
+    ctx.body = { errcode: 401, message: '用户不存在，请重新登录' }
+    return
+  }
   const seeds = await SeedInfoModel.find({ token }, filter)
   if (seeds) {
     errcode = 0
@@ -270,9 +339,15 @@ router.get('/getSeeds', async (ctx, next) => {
 
 // 获取图床数据
 router.get('/getPlatform', async (ctx, next) => {
-  const { type } = ctx.request.query
+  const { type, pageSize, page, curLength } = ctx.request.query
   const token = ctx.cookies.get('token')
-  let errcode = 1, message, data
+  let errcode = 1, message, data, pager
+  let bool = await isExist(token)
+  if (!bool) {
+    // ctx.status = 401
+    ctx.body = { errcode: 401, message: '用户不存在，请重新登录' }
+    return
+  }
   const platform = await PlatformModel.findOne({ token }, filter)
   if (platform) {
     errcode = 0
@@ -285,7 +360,23 @@ router.get('/getPlatform', async (ctx, next) => {
     errcode = 1
     message = '暂无数据'
   }
-  ctx.body = errcode === 0 ? { errcode, data } : { errcode, message }
+  if (data) {
+    let start, end
+    if (curLength == 0) {
+      start = curLength
+      end = page * pageSize
+    } else {
+      start = curLength
+      end = start + pageSize
+    }
+    pager = {
+      total: data.length,
+      curPage: parseInt(page),
+      pageNum: Math.round(data.length / pageSize)
+    }
+    data = data.slice(start, end)
+  }
+  ctx.body = errcode === 0 ? { errcode, data, pager } : { errcode, message }
 })
 
 // 删除图床中的文件
@@ -293,6 +384,12 @@ router.post('/deleteFile', async (ctx, next) => {
   const { url } = ctx.request.body
   const token = ctx.cookies.get('token')
   let errcode = 1, message
+  let bool = await isExist(token)
+  if (!bool) {
+    // ctx.status = 401
+    ctx.body = { errcode: 401, message: '用户不存在，请重新登录' }
+    return
+  }
   const platform = await PlatformModel.findOne({ token })
   if (platform) {
     let files = platform.files.filter(item => item.url != url)
@@ -306,18 +403,24 @@ router.post('/deleteFile', async (ctx, next) => {
   ctx.body = { errcode, message }
 })
 
-router.post('/getWeCode', async (ctx, next) => {
-  const { code } = ctx.request.body
-  const params = {
-    appid: AppID,
-    secret: AppSecret,
-    js_code: code,
-    grant_type: 'authorization_code'
-  }
-  getOpenid(params).then(res => {
-    console.log(res)
-  })
-  ctx.body = { errcode: 0 }
-})
+// router.post('/getWeCode', async (ctx, next) => {
+//   const { code } = ctx.request.body
+//   let errcode, message, data
+//   const params = {
+//     appid: AppID,
+//     secret: AppSecret,
+//     js_code: code,
+//     grant_type: 'authorization_code'
+//   }
+//   const result = await getOpenid(params)
+//   if (!result.errcode) {
+//     errcode = 0
+//     data = result
+//   } else {
+//     errcode = result.errcode
+//     message = result.errmsg
+//   }
+//   ctx.body = errcode === 0 ? { errcode, data } : { errcode, message }
+// })
 
 module.exports = router

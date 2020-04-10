@@ -7,7 +7,7 @@ import { PlusCircleOutlined, DownCircleOutlined } from '@ant-design/icons'
 import NoDataCard from '#/NoDataCard'
 import ScrollToLoadMore from '#/ScrollToLoadMore'
 import FileCard from '#/FileCard'
-import { getCookies } from '../../utils'
+import { deleteCookie } from '../../utils'
 import { uploadFiles, getPlatform } from '&/api'
 import './style.less'
 
@@ -37,24 +37,85 @@ const list = [
   }
 ]
 
-const Reimu = () => {
+interface Props {
+  history: any;
+}
 
-  const [ data, setData ] = useState([])
+const Reimu = (props: Props) => {
+
+  const [ data, setData ] = useState([])  // data.length表示已经获得的数据长度
   const [ cur, setCur ] = useState('')
+  const [ page, setPage ] = useState(1) // page + pageSize表示自己想要获得哪一段的数据
+  // const [ pager, setPager ] = useState<any>({})
   const [ dropDown, setDropDown ] = useState(false)
+  const [ isLoading, setIsLoading ] = useState(false)
 
-  const toggleTab = (key) => {
-    if (cur != key) {
-      setCur(key)
-    }
-    const params = {
-      type: key
-    }
+  const div = document.querySelector('.add-collection')
+
+  const getData = (params, initData = []) => {
     getPlatform(params).then(res => {
       if (res.errcode === 0) {
-        setData(res.data)
+        setData(initData.concat(res.data))
+        // setPager(res.pager)
+        if (res.data.length != 0) {
+          setPage(res.pager.curPage)
+        }
+      } else if (res.errcode == 401) {
+        message.error(res.message)
+        deleteCookie('token')
+        setTimeout(() => {
+          props.history.push('/loginandregister')
+        }, 1000)
       }
+      setIsLoading(false)
     })
+  }
+
+  const toggleTab = (key, bool = '') => {
+    if (isLoading) {
+      if (cur == key) {
+        return
+      } 
+    }
+    setIsLoading(true)
+    if (cur != key) {
+      setCur(key)
+      const params = {
+        type: key,
+        page: 1,
+        pageSize: 10,
+        curLength: 0
+      }
+      getData(params)
+    } else {
+      let params
+      if (bool) {
+        if (bool == 'add') {
+          params = {
+            type: key,
+            page: data.length % 10 == 0 ? page + 1 : page,
+            pageSize: 10,
+            curLength: 0
+          }
+        } else if (bool == 'delet') {
+          params = {
+            type: key,
+            page: page > 1 && data.length % 10 == 1 ? page - 1 : page,
+            pageSize: 10,
+            curLength: 0
+          }
+        }
+        getData(params)
+      } else {
+        params = {
+          type: key,
+          page: page + 1,
+          pageSize: 10,
+          curLength: data.length
+        }
+        getData(params, data)
+      }
+    }
   }
 
   const toggleDropDown = () => {
@@ -79,11 +140,13 @@ const Reimu = () => {
     e.target.value = ''
     uploadFiles(params).then(res => {
       if (res.errcode === 0) {
-        message.success(res.message)
-        toggleTab(cur)
+        message.success(res.message, 1)
+        if (cur == 'all' || cur == key) {
+          toggleTab(cur, 'add')
+        }
         params = null
       } else {
-        message.error(res.message)
+        message.error(res.message, 1)
       }
     })
   }
@@ -91,6 +154,23 @@ const Reimu = () => {
   useEffect(() => {
     toggleTab('all')
   }, [])
+
+  useEffect(() => {
+    // on只能绑定一次，多次绑定，后面的fn会覆盖前面的fn
+    // addEventListener能多次绑定不覆盖
+    const fn = (e) => {
+      // e.preventDefault()
+      if (!dropDown) {
+        return
+      }
+      if (e.target != div) {
+        setDropDown(false)
+      }
+    }
+    document.onclick = fn
+    // document.removeEventListener('click', fn, false)
+    // document.addEventListener('click', fn, false)
+  }, [dropDown])
   
   return (
     <div className='reimu'>
@@ -104,8 +184,8 @@ const Reimu = () => {
             </li>)
           }
         </ul>
-        <div className='add-collection'>
-          { !dropDown ? <PlusCircleOutlined onClick={toggleDropDown} /> : <DownCircleOutlined style={{ color: 'red' }} onClick={toggleDropDown} /> }
+        <div className='add-collection' onClick={toggleDropDown}>
+          { !dropDown ? <PlusCircleOutlined /> : <DownCircleOutlined style={{ color: 'red' }} /> }
           <div className={cx('drop-down-box', dropDown ? 'active' : '')}>
             {
               list.slice(1).map(item => <p key={item.key} >
@@ -118,10 +198,10 @@ const Reimu = () => {
           </div>
         </div>
       </nav>
-      <ScrollToLoadMore scrollUp={false} distance={20}>
+      <ScrollToLoadMore scrollUp={false} loadFn={() => toggleTab(cur)} distance={20}>
         <div className='files-box'>
           {
-            data.length > 0 ? data.map(item => <FileCard key={item.url} type={item.type} url={item.url} updateData={() => toggleTab(cur)} />) : <NoDataCard />
+            data.length > 0 ? data.map(item => <FileCard key={item.url} type={item.type} url={item.url} updateData={() => toggleTab(cur, 'delet')} />) : <NoDataCard />
           }
         </div>
       </ScrollToLoadMore>

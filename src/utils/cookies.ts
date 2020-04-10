@@ -15,7 +15,7 @@ module.exports = {
     return obj
   },
   'deleteCookie': (name) => {
-    nw.Window.get().cookies.remove({ name, url: 'http://0.0.0.0' })
+    nw.Window.get().cookies.remove({ name, url: 'http://localhost' })
   }
 }
 
